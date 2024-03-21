@@ -69,30 +69,30 @@ def run_ffmpeg(output_path, input_path, map_streams, preset='fast', crf=20):
     ffmpeg.execute()
 
 
-def create_directories(root, input_dir, encoded_dir):
+def create_directories(root, input_dir):
     date = datetime.today().strftime('%Y-%m-%d')
     relpath = os.path.relpath(root, input_dir)
-    if relpath != '.':
-        save_dir = os.path.join(encoded_dir, relpath)
-        os.makedirs(save_dir, exist_ok=True)
 
     mv_dir = os.path.join(os.environ['archive_dir'], date, relpath)
     os.makedirs(mv_dir, exist_ok=True)
 
-    return relpath, mv_dir
+    encoded_dir = str(os.environ['encoded_dir'])
+    encoded_dir = os.path.join(os.environ['encoded_dir'], date, relpath)
+    os.makedirs(encoded_dir, exist_ok=True)
+
+    return mv_dir, encoded_dir
 
 
 def main():
     input_dir = str(os.environ['input_dir'])
-    encoded_dir = str(os.environ['encoded_dir'])
     for root, _, files in os.walk(input_dir):
-        relpath, mv_dir = create_directories(root, input_dir, encoded_dir)
+        mv_dir, encoded_dir = create_directories(root, input_dir)
 
         for file_path in files:
             if os.path.splitext(file_path)[-1].lower() == '.mkv':
                 video_path = os.path.join(root, file_path)
                 sys.stdout.write('{0}\n'.format(video_path))
-                output_path = os.path.join(encoded_dir, relpath, file_path)
+                output_path = os.path.join(encoded_dir, file_path)
                 map_streams = get_maps(video_path)
                 run_ffmpeg(output_path, video_path, map_streams)
 
