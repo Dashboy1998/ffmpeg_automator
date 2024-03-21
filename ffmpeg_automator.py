@@ -69,9 +69,9 @@ def run_ffmpeg(output_path, input_path, map_streams, preset='fast', crf=20):
     ffmpeg.execute()
 
 
-def create_directories(root, input_dir):
+def create_directories(root):
     date = datetime.today().strftime('%Y-%m-%d')
-    relpath = os.path.relpath(root, input_dir)
+    relpath = os.path.relpath(root, os.environ['input_dir'])
 
     mv_dir = os.path.join(os.environ['archive_dir'], date, relpath)
     os.makedirs(mv_dir, exist_ok=True)
@@ -84,9 +84,8 @@ def create_directories(root, input_dir):
 
 
 def main():
-    input_dir = str(os.environ['input_dir'])
-    for root, _, files in os.walk(input_dir):
-        mv_dir, encoded_dir = create_directories(root, input_dir)
+    for root, _, files in os.walk(os.environ['input_dir']):
+        mv_dir, encoded_dir = create_directories(root)
 
         for file_path in files:
             if os.path.splitext(file_path)[-1].lower() == '.mkv':
