@@ -69,22 +69,14 @@ def run_ffmpeg(output_path, input_path, map_streams, preset='fast', crf=20):
     ffmpeg.execute()
 
 
-def create_archive_dir_for_date():
-    date = datetime.today().strftime('%Y-%m-%d')
-    archive_dir_date = os.path.join(os.environ['archive_dir'], date)
-
-    os.makedirs(archive_dir_date, exist_ok=True)
-    return archive_dir_date
-
-
 def create_directories(root, input_dir, encoded_dir):
-    archive_dir_date = create_archive_dir_for_date()
+    date = datetime.today().strftime('%Y-%m-%d')
     relpath = os.path.relpath(root, input_dir)
     if relpath != '.':
         save_dir = os.path.join(encoded_dir, relpath)
         os.makedirs(save_dir, exist_ok=True)
 
-    mv_dir = os.path.join(archive_dir_date, relpath)
+    mv_dir = os.path.join(os.environ['archive_dir'], date, relpath)
     os.makedirs(mv_dir, exist_ok=True)
 
     return relpath, mv_dir
