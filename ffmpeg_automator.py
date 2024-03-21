@@ -1,24 +1,23 @@
 #!/bin/python
 
-import asyncio
 import json
 import os
 import shutil
 import sys
 from datetime import datetime
 
-from ffmpeg.asyncio import FFmpeg
+from ffmpeg import FFmpeg
 
 
 # Get stream information from MKV file
-async def get_media_info(file_path):
+def get_media_info(file_path):
     ffmpeg = FFmpeg(executable='ffprobe').input(
         file_path,
         print_format='json',
         show_streams=None,
         )
 
-    return await ffmpeg.execute()
+    return ffmpeg.execute()
 
 
 def get_audio_maps(streams):
@@ -49,13 +48,13 @@ def get_subtitle_maps(streams):
 
 
 def get_maps(file_path):
-    media_info = json.loads(asyncio.run(get_media_info(file_path)))
+    media_info = json.loads(get_media_info(file_path))
 
     streams = media_info['streams']
     return ['0:v'] + get_audio_maps(streams) + get_subtitle_maps(streams)
 
 
-async def run_ffmpeg(output_path, input_path, map_streams, preset='fast', crf=20):
+def run_ffmpeg(output_path, input_path, map_streams, preset='fast', crf=20):
     # To set bit rate add b='128k'
     # To set stereo audio add ac=2, channel_layout='stereo'
     # ac=2 specifies that the output audio should have 2 channels (stereo).
@@ -74,7 +73,7 @@ async def run_ffmpeg(output_path, input_path, map_streams, preset='fast', crf=20
             )
         )
 
-    await ffmpeg.execute()
+    ffmpeg.execute()
 
 
 def create_archive_dir_for_date():
@@ -110,7 +109,7 @@ def main():
                 sys.stdout.write('{0}\n'.format(video_path))
                 output_path = os.path.join(encoded_dir, relpath, file_path)
                 map_streams = get_maps(video_path)
-                asyncio.run(run_ffmpeg(output_path, video_path, map_streams))
+                run_ffmpeg(output_path, video_path, map_streams)
 
                 mv_video_path = os.path.join(mv_dir, file_path)
                 shutil.move(video_path, mv_video_path)
