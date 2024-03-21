@@ -76,7 +76,6 @@ def create_directories(root):
     mv_dir = os.path.join(os.environ['archive_dir'], date, relpath)
     os.makedirs(mv_dir, exist_ok=True)
 
-    encoded_dir = str(os.environ['encoded_dir'])
     encoded_dir = os.path.join(os.environ['encoded_dir'], date, relpath)
     os.makedirs(encoded_dir, exist_ok=True)
 
