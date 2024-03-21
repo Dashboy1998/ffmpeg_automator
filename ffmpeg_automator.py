@@ -9,17 +9,6 @@ from datetime import datetime
 from ffmpeg import FFmpeg
 
 
-# Get stream information from MKV file
-def get_media_info(file_path):
-    ffmpeg = FFmpeg(executable='ffprobe').input(
-        file_path,
-        print_format='json',
-        show_streams=None,
-        )
-
-    return ffmpeg.execute()
-
-
 def get_audio_maps(streams):
     audio_map = []
     audio_languages = ['eng', 'jpn']
@@ -48,7 +37,13 @@ def get_subtitle_maps(streams):
 
 
 def get_maps(file_path):
-    media_info = json.loads(get_media_info(file_path))
+    media_info = json.loads(
+        FFmpeg(executable='ffprobe').input(
+            file_path,
+            print_format='json',
+            show_streams=None,
+            ).execute()
+        )
 
     streams = media_info['streams']
     return ['0:v'] + get_audio_maps(streams) + get_subtitle_maps(streams)
