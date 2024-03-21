@@ -9,9 +9,6 @@ from datetime import datetime
 
 from ffmpeg.asyncio import FFmpeg
 
-input_dir = str(os.environ['input_dir'])
-encoded_dir = str(os.environ['encoded_dir'])
-
 
 # Get stream information from MKV file
 async def get_media_info(file_path):
@@ -88,7 +85,7 @@ def create_archive_dir_for_date():
     return archive_dir_date
 
 
-def create_directories(root):
+def create_directories(root, input_dir, encoded_dir):
     archive_dir_date = create_archive_dir_for_date()
     relpath = os.path.relpath(root, input_dir)
     if relpath != '.':
@@ -102,8 +99,10 @@ def create_directories(root):
 
 
 def main():
+    input_dir = str(os.environ['input_dir'])
+    encoded_dir = str(os.environ['encoded_dir'])
     for root, _, files in os.walk(input_dir):
-        relpath, mv_dir = create_directories(root)
+        relpath, mv_dir = create_directories(root, input_dir, encoded_dir)
 
         for file_path in files:
             if os.path.splitext(file_path)[-1].lower() == '.mkv':
