@@ -12,9 +12,6 @@ from ffmpeg.asyncio import FFmpeg
 input_dir = str(os.environ['input_dir'])
 encoded_dir = str(os.environ['encoded_dir'])
 
-# Files will be moved into a subdirectory YYYY-MM-DD
-archive_dir = str(os.environ['archive_dir'])
-
 
 # Get stream information from MKV file
 async def get_media_info(file_path):
@@ -85,7 +82,7 @@ async def run_ffmpeg(output_path, input_path, map_streams, preset='fast', crf=20
 
 def create_archive_dir_for_date():
     date = datetime.today().strftime('%Y-%m-%d')
-    archive_dir_date = os.path.join(archive_dir, date)
+    archive_dir_date = os.path.join(os.environ['archive_dir'], date)
 
     os.makedirs(archive_dir_date, exist_ok=True)
     return archive_dir_date
