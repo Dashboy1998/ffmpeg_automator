@@ -109,7 +109,7 @@ def main():
         relpath, mv_dir = create_directories(root)
 
         for file_path in files:
-            if os.path.splitext(file_path)[-1].lower() == 'mkv':
+            if os.path.splitext(file_path)[-1].lower() == '.mkv':
                 video_path = os.path.join(root, file_path)
                 sys.stdout.write('{0}\n'.format(video_path))
                 output_path = os.path.join(encoded_dir, relpath, file_path)
