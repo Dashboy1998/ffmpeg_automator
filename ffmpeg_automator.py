@@ -55,9 +55,7 @@ def run_ffmpeg(output_path, input_path, map_streams, preset='fast', crf=20):
     # ac=2 specifies that the output audio should have 2 channels (stereo).
     # channel_layout='stereo' ensures that the channels are set to stereo.
     ffmpeg = (
-        FFmpeg()
-        .input(input_path)
-        .output(
+        FFmpeg().input(input_path).output(
             output_path,
             vcodec='libx265',
             acodec='aac',
