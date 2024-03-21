@@ -49,7 +49,7 @@ def get_maps(file_path):
     return ['0:v'] + get_audio_maps(streams) + get_subtitle_maps(streams)
 
 
-def run_ffmpeg(input_path, output_path, preset='fast', crf=20):
+def run_ffmpeg(input_path, output_path, vcodec='libx265', acodec='aac', scodec='copy', preset='fast', crf=20):
     # To set bit rate add b='128k'
     # To set stereo audio add ac=2, channel_layout='stereo'
     # ac=2 specifies that the output audio should have 2 channels (stereo).
@@ -58,9 +58,9 @@ def run_ffmpeg(input_path, output_path, preset='fast', crf=20):
     ffmpeg = (
         FFmpeg().input(input_path).output(
             output_path,
-            vcodec='libx265',
-            acodec='aac',
-            scodec='copy',
+            vcodec=vcodec,
+            acodec=acodec,
+            scodec=scodec,
             map=map_streams,
             crf=crf,
             preset=preset,
