@@ -105,7 +105,7 @@ def create_directories(root):
 
 
 def main():
-    for root, _dirs, files in os.walk(input_dir):
+    for root, _, files in os.walk(input_dir):
         relpath, mv_dir = create_directories(root)
 
         for file_path in files:
