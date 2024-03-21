@@ -49,11 +49,12 @@ def get_maps(file_path):
     return ['0:v'] + get_audio_maps(streams) + get_subtitle_maps(streams)
 
 
-def run_ffmpeg(output_path, input_path, map_streams, preset='fast', crf=20):
+def run_ffmpeg(output_path, input_path, preset='fast', crf=20):
     # To set bit rate add b='128k'
     # To set stereo audio add ac=2, channel_layout='stereo'
     # ac=2 specifies that the output audio should have 2 channels (stereo).
     # channel_layout='stereo' ensures that the channels are set to stereo.
+    map_streams = get_maps(input_path)
     ffmpeg = (
         FFmpeg().input(input_path).output(
             output_path,
@@ -91,8 +92,7 @@ def main():
                 video_path = os.path.join(root, file_path)
                 sys.stdout.write('{0}\n'.format(video_path))
                 output_path = os.path.join(encoded_dir, file_path)
-                map_streams = get_maps(video_path)
-                run_ffmpeg(output_path, video_path, map_streams)
+                run_ffmpeg(output_path, video_path)
 
                 mv_video_path = os.path.join(mv_dir, file_path)
                 shutil.move(video_path, mv_video_path)
