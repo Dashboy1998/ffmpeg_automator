@@ -42,7 +42,7 @@ def get_maps(file_path):
             file_path,
             print_format='json',
             show_streams=None,
-            ).execute()
+            ).execute(),
         )
 
     streams = media_info['streams']
