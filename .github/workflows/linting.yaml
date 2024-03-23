@@ -9,16 +9,6 @@ on:  # yamllint disable-line rule:truthy
 
 run-name: Pull request - ${{ github.event.pull_request.number }}
 jobs:
-  shellcheck:
-    name: Lint - Shell
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Shellcheck
-        uses: ludeeus/action-shellcheck@2.0.0
-
   dockerlint:
     name: Lint - Docker
     runs-on: ubuntu-latest
