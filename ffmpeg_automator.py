@@ -8,6 +8,11 @@ from datetime import datetime
 
 from ffmpeg import FFmpeg
 
+VCODEC='libx265'
+ACODEC='aac'
+SCODEC='copy'
+PRESET='fast'
+CRF=20
 
 def get_audio_maps(streams):
     audio_map = []
@@ -49,7 +54,7 @@ def get_maps(file_path):
     return ['0:v'] + get_audio_maps(streams) + get_subtitle_maps(streams)
 
 
-def run_ffmpeg(input_path, output_path, vcodec='libx265', acodec='aac', scodec='copy', preset='fast', crf=20):
+def run_ffmpeg(input_path, output_path, vcodec, acodec, scodec, preset, crf):
     # To set bit rate add b='128k'
     # To set stereo audio add ac=2, channel_layout='stereo'
     # ac=2 specifies that the output audio should have 2 channels (stereo).
@@ -92,7 +97,7 @@ def main():
                 video_path = os.path.join(root, file_path)
                 sys.stdout.write('{0}\n'.format(video_path))
                 output_path = os.path.join(encoded_dir, file_path)
-                run_ffmpeg(video_path, output_path)
+                run_ffmpeg(video_path, output_path, VCODEC, ACODEC, SCODEC, PRESET, CRF)
 
                 mv_video_path = os.path.join(mv_dir, file_path)
                 shutil.move(video_path, mv_video_path)
