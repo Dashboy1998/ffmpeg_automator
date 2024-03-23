@@ -10,4 +10,4 @@ else
 fi
 
 source vars.env
-python ffmpeg_automator.py
+python scripts/ffmpeg_automator.py
