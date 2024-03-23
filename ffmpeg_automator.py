@@ -8,11 +8,12 @@ from datetime import datetime
 
 from ffmpeg import FFmpeg
 
-VCODEC='libx265'
-ACODEC='aac'
-SCODEC='copy'
-PRESET='fast'
-CRF=20
+VCODEC = 'libx265'
+ACODEC = 'aac'
+SCODEC = 'copy'
+PRESET = 'fast'
+CRF = 20
+
 
 def get_audio_maps(streams):
     audio_map = []
