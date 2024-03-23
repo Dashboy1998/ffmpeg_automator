@@ -8,12 +8,6 @@ from datetime import datetime
 
 from ffmpeg import FFmpeg
 
-VCODEC = 'libx265'
-ACODEC = 'aac'
-SCODEC = 'copy'
-PRESET = 'fast'
-CRF = 20
-
 
 def get_audio_maps(streams):
     audio_map = []
@@ -55,7 +49,7 @@ def get_maps(file_path):
     return ['0:v'] + get_audio_maps(streams) + get_subtitle_maps(streams)
 
 
-def run_ffmpeg(input_path, output_path, vcodec, acodec, scodec, preset, crf):
+def run_ffmpeg(input_path, output_path):
     # To set bit rate add b='128k'
     # To set stereo audio add ac=2, channel_layout='stereo'
     # ac=2 specifies that the output audio should have 2 channels (stereo).
@@ -64,12 +58,12 @@ def run_ffmpeg(input_path, output_path, vcodec, acodec, scodec, preset, crf):
     ffmpeg = (
         FFmpeg().input(input_path).output(
             output_path,
-            vcodec=vcodec,
-            acodec=acodec,
-            scodec=scodec,
+            vcodec=os.environ['VCODEC'],
+            acodec=os.environ['ACODEC'],
+            scodec=os.environ['SCODEC'],
             map=map_streams,
-            crf=crf,
-            preset=preset,
+            crf=os.environ['PRESET'],
+            preset=os.environ['CRF'],
             )
         )
 
@@ -78,19 +72,19 @@ def run_ffmpeg(input_path, output_path, vcodec, acodec, scodec, preset, crf):
 
 def create_directories(root):
     date = datetime.today().strftime('%Y-%m-%d')
-    relpath = os.path.relpath(root, os.environ['input_dir'])
+    relpath = os.path.relpath(root, os.environ['INPUT_DIR'])
 
-    mv_dir = os.path.join(os.environ['archive_dir'], date, relpath)
+    mv_dir = os.path.join(os.environ['ARCHIVE_DIR'], date, relpath)
     os.makedirs(mv_dir, exist_ok=True)
 
-    encoded_dir = os.path.join(os.environ['encoded_dir'], date, relpath)
+    encoded_dir = os.path.join(os.environ['ENCODED_DIR'], date, relpath)
     os.makedirs(encoded_dir, exist_ok=True)
 
     return mv_dir, encoded_dir
 
 
 def main():
-    for root, _, files in os.walk(os.environ['input_dir']):
+    for root, _, files in os.walk(os.environ['INPUT_DIR']):
         mv_dir, encoded_dir = create_directories(root)
 
         for file_path in files:
@@ -98,7 +92,7 @@ def main():
                 video_path = os.path.join(root, file_path)
                 sys.stdout.write('{0}\n'.format(video_path))
                 output_path = os.path.join(encoded_dir, file_path)
-                run_ffmpeg(video_path, output_path, VCODEC, ACODEC, SCODEC, PRESET, CRF)
+                run_ffmpeg(video_path, output_path)
 
                 mv_video_path = os.path.join(mv_dir, file_path)
                 shutil.move(video_path, mv_video_path)

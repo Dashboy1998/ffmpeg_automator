@@ -1,0 +1,17 @@
+---
+services:
+  ffmpeg_automator:
+    image: ffmpeg_automator
+    build:
+      dockerfile: Dockerfile
+    stop_grace_period: 3s
+    container_name: ffmpeg_automator
+    env_file:
+      - enviroment_vars.conf
+    volumes:
+      - "./:/data"
+      # - "./encoded:/data/encoded"
+      # It is not recommended to mount separate volumes for /data/input_dir and /data/archive_dir as that results in python having to
+      # copy then delete the data for rename rather than a move.
+      # - "./input_dir/:/data/input_dir"
+      # - "./archive_dir/:/data/archive_dir"
