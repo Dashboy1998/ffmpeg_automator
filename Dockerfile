@@ -1,5 +1,5 @@
 # hadolint ignore=DL3007
-FROM python:3.11-slim-bookworm
+FROM python:3-slim-bookworm
 
 WORKDIR /
 COPY --chown=user:user requirements.txt requirements.txt
