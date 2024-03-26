@@ -1,4 +1,4 @@
-# hadolint ignore=DL3006
+# hadolint ignore=DL3007
 FROM linuxserver/ffmpeg:latest
 
 WORKDIR /
