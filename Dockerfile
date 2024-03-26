@@ -1,9 +1,10 @@
-# hadolint ignore=DL3007
-FROM linuxserver/ffmpeg
+# hadolint ignore=DL3006
+FROM linuxserver/ffmpeg:latest
 
 WORKDIR /
 COPY --chown=user:user requirements.txt requirements.txt
 
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install --no-install-recommends -y \
     python-is-python3 \
     pip \
