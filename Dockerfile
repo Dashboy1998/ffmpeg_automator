@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     && rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN pip install --no-cache-dir --requirement requirements.txt \
+RUN pip install --break-system-packages --no-cache-dir --requirement requirements.txt \
     && rm requirements.txt
 
 RUN mkdir --parents /data/{input_dir,encoded_dir,archive_dir} \

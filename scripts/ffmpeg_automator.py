@@ -62,8 +62,8 @@ def run_ffmpeg(input_path, output_path):
             acodec=os.environ['ACODEC'],
             scodec=os.environ['SCODEC'],
             map=map_streams,
-            crf=os.environ['PRESET'],
-            preset=os.environ['CRF'],
+            crf=os.environ['CRF'],
+            preset=os.environ['PRESET'],
             )
         )
 
