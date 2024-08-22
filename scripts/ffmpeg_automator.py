@@ -49,12 +49,87 @@ def get_maps(file_path):
     return ['0:v'] + get_audio_maps(streams) + get_subtitle_maps(streams)
 
 
+def check_hdr(file_path):
+    media_info = json.loads(
+        FFmpeg(executable='ffprobe').input(
+            file_path,
+            print_format='json',
+            show_streams=None,
+            ).execute(),
+        )
+
+    hdr = False
+
+    # Assume there is only one video stream
+    for stream in media_info['streams']:
+        if stream['codec_type'] == 'video':
+            if 'color_space' in stream:
+                hdr = 'bt2020nc' == stream['color_space']
+            break
+
+    return hdr
+
+
+def get_hdr_setings(file_path):
+    media_info = json.loads(
+        FFmpeg(executable='ffprobe').input(
+            file_path,
+            print_format='json',
+            select_streams='v',
+            read_intervals="%+#1",
+            show_frames=None,
+            show_entries="frame=color_space,color_primaries,color_transfer,side_data_list,pix_fmt"
+            ).execute(),
+        )
+
+    hdr_settings = dict()
+
+    for frame in media_info['frames']:
+        hdr_settings['color_space'] = frame['color_space']
+        hdr_settings['color_primaries'] = frame['color_primaries']
+        hdr_settings['color_transfer'] = frame['color_transfer']
+        hdr_settings['pix_fmt'] = frame['pix_fmt']
+        for side_data in frame['side_data_list']:
+            if side_data['side_data_type'] == 'Mastering display metadata':
+                hdr_settings['red_x'] = side_data['red_x']
+                hdr_settings['red_y'] = side_data['red_y']
+                hdr_settings['green_x'] = side_data['green_x']
+                hdr_settings['green_y'] = side_data['green_y']
+                hdr_settings['blue_x'] = side_data['blue_x']
+                hdr_settings['blue_y'] = side_data['blue_y']
+                hdr_settings['white_point_x'] = side_data['white_point_x']
+                hdr_settings['white_point_y'] = side_data['white_point_y']
+                hdr_settings['min_luminance'] = side_data['min_luminance']
+                hdr_settings['max_luminance'] = side_data['max_luminance']
+
+    return hdr_settings
+
+
 def run_ffmpeg(input_path, output_path):
     # To set bit rate add b='128k'
     # To set stereo audio add ac=2, channel_layout='stereo'
     # ac=2 specifies that the output audio should have 2 channels (stereo).
     # channel_layout='stereo' ensures that the channels are set to stereo.
     map_streams = get_maps(input_path)
+    is_hdr = check_hdr(input_path)
+    if is_hdr:
+        exit()
+        hdr_settings = get_hdr_setings(input_path)
+        ffmpeg = (
+            FFmpeg().input(input_path).output(
+                output_path,
+                vcodec=os.environ['VCODEC'],
+                acodec=os.environ['ACODEC'],
+                scodec=os.environ['SCODEC'],
+                map=map_streams,
+                crf=os.environ['CRF'],
+                preset=os.environ['PRESET'],
+                ).global_args(
+                    # Unsure of how to add this part
+                    '-x265-params', "hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll=0,0 -pix_fmt {pix_fmt}".format(**hdr_settings)
+                )
+            )
+
     ffmpeg = (
         FFmpeg().input(input_path).output(
             output_path,
