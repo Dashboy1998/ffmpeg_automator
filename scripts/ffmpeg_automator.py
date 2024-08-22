@@ -6,7 +6,7 @@ import shutil
 import sys
 from datetime import datetime
 
-from ffmpeg import FFmpeg
+from ffmpeg import FFmpeg, Progress
 
 
 def get_audio_maps(streams):
@@ -67,7 +67,12 @@ def run_ffmpeg(input_path, output_path):
             )
         )
 
+    @ffmpeg.on("progress")
+    def on_progress(progress: Progress):
+        print(progress, end='\r')
+
     ffmpeg.execute()
+    print("")
 
 
 def create_directories(root):
