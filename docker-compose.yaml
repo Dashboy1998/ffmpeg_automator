@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
     stop_grace_period: 3s
     container_name: ffmpeg_automator
+    network_mode: none
     env_file:
       - enviroment_vars.conf
     volumes:
