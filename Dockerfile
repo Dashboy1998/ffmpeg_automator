@@ -29,9 +29,9 @@ ENV INPUT_DIR=/data/input_dir \
     ENCODED_DIR=/data/encoded_dir \
     ARCHIVE_DIR=/data/archive_dir \
     VCODEC=libx265 \
-    ACODEC=aac \
+    ACODEC=libfdk_aac \
     SCODEC=copy \
     PRESET=fast \
-    CRF=20
+    CRF=22
 
 ENTRYPOINT [ "python", "/scripts/ffmpeg_automator.py" ]
