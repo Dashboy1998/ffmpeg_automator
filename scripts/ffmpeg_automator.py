@@ -119,7 +119,7 @@ def run_ffmpeg(input_path, output_path):
     map_streams = get_maps(input_path)
     is_hdr = check_hdr(input_path)
     if is_hdr:
-        print("HDR found, exiting")
+        sys.stdout.write("HDR found, exiting\n")
         return False
         hdr_settings = get_hdr_setings(input_path)
         ffmpeg = (
@@ -154,7 +154,7 @@ def run_ffmpeg(input_path, output_path):
         print(progress, end='\r')
 
     ffmpeg.execute()
-    print("")
+    sys.stdout.write("\n")
     return True
 
 
