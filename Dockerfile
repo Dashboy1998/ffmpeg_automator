@@ -34,7 +34,7 @@ ENV INPUT_DIR=/data/input_dir \
     PRESET=fast \
     CRF=22 \
     FIRST_AUDIO_PER_LANG_ONLY="true" \
-    AUDIO_LANGUAGES=[ "eng" ] \
-    SUBTITLE_LANGUAGES=[ "eng" ]
+    AUDIO_LANGUAGES='[ "eng" ]' \
+    SUBTITLE_LANGUAGES='[ "eng" ]'
 
 ENTRYPOINT [ "python", "/scripts/ffmpeg_automator.py" ]
