@@ -11,21 +11,27 @@ from ffmpeg import FFmpeg, Progress
 
 def get_audio_maps(streams):
     audio_map = []
-    audio_languages = ['eng', 'jpn']
+    audio_languages = json.loads(os.environ['AUDIO_LANGUAGES'])
 
+    get_first_audio_per_lang_only = os.environ['FIRST_AUDIO_PER_LANG_ONLY'].lower() == 'true'
+    lang_found = []
     index = -1
     for stream in streams:
         if stream['codec_type'] == 'audio':
             index = index + 1
             if stream['tags']['language'] in audio_languages:
-                audio_map.append('0:a:{0}'.format(str(index)))
+                if not get_first_audio_per_lang_only \
+                   or ( get_first_audio_per_lang_only and stream['tags']['language'] not in lang_found ):
+                    audio_map.append('0:a:{0}'.format(str(index)))
+                    lang_found.append(stream['tags']['language'])
 
     return audio_map
 
 
 def get_subtitle_maps(streams):
     subtitle_map = []
-    subtitle_languages = ['eng']
+    subtitle_languages = json.loads(os.environ['SUBTITLE_LANGUAGES'])
+
     index = -1
     for stream in streams:
         if stream['codec_type'] == 'subtitle':
