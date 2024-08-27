@@ -120,7 +120,7 @@ def run_ffmpeg(input_path, output_path):
     is_hdr = check_hdr(input_path)
     if is_hdr:
         print("HDR found, exiting")
-        exit()
+        return False
         hdr_settings = get_hdr_setings(input_path)
         ffmpeg = (
             FFmpeg().input(input_path).output(
@@ -155,6 +155,7 @@ def run_ffmpeg(input_path, output_path):
 
     ffmpeg.execute()
     print("")
+    return True
 
 
 def create_directories(root):
@@ -179,10 +180,13 @@ def main():
                 video_path = os.path.join(root, file_path)
                 sys.stdout.write('{0}\n'.format(video_path))
                 output_path = os.path.join(encoded_dir, file_path)
-                run_ffmpeg(video_path, output_path)
+                encode_success = run_ffmpeg(video_path, output_path)
 
-                mv_video_path = os.path.join(mv_dir, file_path)
-                shutil.move(video_path, mv_video_path)
+                if encode_success:
+                    mv_video_path = os.path.join(mv_dir, file_path)
+                    shutil.move(video_path, mv_video_path)
+                else:
+                    sys.stdout.write('Unable to encode video: {0}\n'.format(video_path))
 
 
 if __name__ == '__main__':
