@@ -151,7 +151,7 @@ def run_ffmpeg(input_path, output_path):
 
     @ffmpeg.on("progress")
     def on_progress(progress: Progress):
-        print(progress, end='\r')
+        sys.stdout.write("{0}\r".format(str(progress)))
 
     ffmpeg.execute()
     sys.stdout.write("\n")
