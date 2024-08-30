@@ -23,11 +23,11 @@ then using FFMPEG it will encode the videos to you the settings you defined
 | INPUT_DIR | Absolute path volume which contains the MKVs | /data/archive_dir | Absolute Path |
 | ENCODED_DIR | Absolute path volume and is where encoded MKVs are saved | /data/encoded_dir | Absolute Path |
 | ARCHIVE_DIR | Absolute path volume where original MKVs are moved to after being encoded | /data/archive_dir | Absolute Path |
-| VCODEC | Video codec | libx265 | See FFMPEG documentation |
+| VCODEC | Video codec | libsvtav1 | See FFMPEG documentation |
 | ACODEC | Audio codec | libfdk_aac | See FFMPEG documentation |
 | SCODEC | Subtitle codec | copy | See FFMPEG documentation |
-| PRESET | Preset used for compression effciency | fast | Depends on VCODEC, see FFMPEG documentation |
-| CRF | Constant Rate Factor used by encoder | 22 | Depends on VCODEC, see FFMPEG documentation |
+| PRESET | Preset used for compression effciency | 6 | Depends on VCODEC, see FFMPEG documentation |
+| CRF | Constant Rate Factor used by encoder | 32 | Depends on VCODEC, see FFMPEG documentation |
 | FIRST_AUDIO_PER_LANG_ONLY | Set to get only the first audio track of a given language | true | boolean
 AUDIO_LANGUAGES | Array with list of languages to save audio tracks | [ "eng" ] | Array of strings ex. [ "eng", "jpn" ]
 SUBTITLE_LANGUAGES | Array with list of langiages to save for subtitles | [ "eng" ] | Array of strings ex. [ "eng", "jpn" ]
