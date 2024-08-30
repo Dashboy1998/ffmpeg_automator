@@ -187,13 +187,18 @@ def main():
                 video_path = os.path.join(root, file_path)
                 sys.stdout.write('{0}\n'.format(video_path))
                 output_path = os.path.join(encoded_dir, file_path)
-                encode_success = run_ffmpeg(video_path, output_path)
 
-                if encode_success:
-                    mv_video_path = os.path.join(mv_dir, file_path)
-                    shutil.move(video_path, mv_video_path)
+                # Check if output file exists
+                if os.path.isfile(output_path):
+                    sys.stdout.write('File already exists in destination, unable to encode video: {0}\n'.format(video_path))
                 else:
-                    sys.stdout.write('Unable to encode video: {0}\n'.format(video_path))
+                    encode_success = run_ffmpeg(video_path, output_path)
+
+                    if encode_success:
+                        mv_video_path = os.path.join(mv_dir, file_path)
+                        shutil.move(video_path, mv_video_path)
+                    else:
+                        sys.stdout.write('Unable to encode video: {0}\n'.format(video_path))
 
 
 if __name__ == '__main__':
