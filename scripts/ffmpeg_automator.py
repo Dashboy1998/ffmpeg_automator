@@ -6,7 +6,7 @@ import shutil
 import sys
 from datetime import datetime
 
-from ffmpeg import FFmpeg, Progress
+from ffmpeg import FFmpeg, Progress, FFmpegError
 
 
 def get_audio_maps(streams):
@@ -153,7 +153,14 @@ def run_ffmpeg(input_path, output_path):
     def on_progress(progress: Progress):
         sys.stdout.write("{0}\r".format(str(progress)))
 
-    ffmpeg.execute()
+    try:
+        ffmpeg.execute()
+    except FFmpegError as exception:
+        sys.stdout.write("An exception has been occurred!")
+        sys.stdout.write("- Message from ffmpeg: {0}\n".format(str(exception.message)))
+        sys.stdout.write("- Arguments to execute ffmpeg: {0}\n".format(str(exception.arguments)))
+        return False
+
     sys.stdout.write("\n")
     return True
 
