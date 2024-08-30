@@ -6,7 +6,7 @@ import shutil
 import sys
 from datetime import datetime
 
-from ffmpeg import FFmpeg, Progress, FFmpegError
+from ffmpeg import FFmpeg, FFmpegError, Progress
 
 
 def get_audio_maps(streams):
