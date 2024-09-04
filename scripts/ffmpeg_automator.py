@@ -125,12 +125,14 @@ def run_ffmpeg(input_path, output_path):
         ffmpeg = (
             FFmpeg().input(input_path).output(
                 output_path,
-                vcodec=os.environ['VCODEC'],
-                acodec=os.environ['ACODEC'],
-                scodec=os.environ['SCODEC'],
-                map=map_streams,
-                crf=os.environ['CRF'],
-                preset=os.environ['PRESET'],
+                {
+                    'vcodec':os.environ['VCODEC'],
+                    'acodec':os.environ['ACODEC'],
+                    'scodec':os.environ['SCODEC'],
+                    'map':map_streams,
+                    'crf':os.environ['CRF'],
+                    'preset':os.environ['PRESET'],
+                }
                 ).global_args(
                     # Unsure of how to add this part
                     '-x265-params', "hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll=0,0 -pix_fmt {pix_fmt}".format(**hdr_settings)
@@ -140,12 +142,14 @@ def run_ffmpeg(input_path, output_path):
     ffmpeg = (
         FFmpeg().input(input_path).output(
             output_path,
-            vcodec=os.environ['VCODEC'],
-            acodec=os.environ['ACODEC'],
-            scodec=os.environ['SCODEC'],
-            map=map_streams,
-            crf=os.environ['CRF'],
-            preset=os.environ['PRESET'],
+            {
+                'vcodec':os.environ['VCODEC'],
+                'acodec':os.environ['ACODEC'],
+                'scodec':os.environ['SCODEC'],
+                'map':map_streams,
+                'crf':os.environ['CRF'],
+                'preset':os.environ['PRESET'],
+            }
             )
         )
 
