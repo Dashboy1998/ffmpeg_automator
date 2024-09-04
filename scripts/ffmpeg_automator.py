@@ -179,7 +179,7 @@ def create_directories(root):
 
 
 def main():
-    for root, _, files in os.walk(os.environ['INPUT_DIR']):
+    for root, _, files in sorted(os.walk(os.environ['INPUT_DIR'])):
         mv_dir, encoded_dir = create_directories(root)
 
         for file_path in files:
