@@ -51,8 +51,18 @@ def get_maps(file_path):
             ).execute(),
         )
 
+    map_list = ['0:v']
     streams = media_info['streams']
-    return ['0:v'] + get_audio_maps(streams) + get_subtitle_maps(streams)
+
+    audio_maps = get_audio_maps(streams)
+    if audio_maps:
+        map_list + audio_maps
+
+    subtitle_map = get_subtitle_maps(streams)
+    if subtitle_map: 
+        map_list + subtitle_map
+
+    return map_list
 
 
 def check_hdr(file_path):
