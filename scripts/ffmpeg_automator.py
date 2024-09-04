@@ -117,6 +117,9 @@ def get_hdr_setings(file_path):
                 hdr_settings['white_point_y'] = side_data['white_point_y']
                 hdr_settings['min_luminance'] = side_data['min_luminance']
                 hdr_settings['max_luminance'] = side_data['max_luminance']
+            if side_data['side_data_type'] == 'Content light level metadata':
+                hdr_settings['max_content'] = side_data['max_content']
+                hdr_settings['max_average'] = side_data['max_average']
 
     return hdr_settings
 
@@ -140,7 +143,7 @@ def run_ffmpeg(input_path, output_path):
                     'map':map_streams,
                     'crf':os.environ['CRF'],
                     'preset':os.environ['PRESET'],
-                    'libsvtav1-params':"hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll=0,0 -pix_fmt {pix_fmt}".format(**hdr_settings),
+                    'libsvtav1-params':"hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll={max_content},{max_average} -pix_fmt {pix_fmt}".format(**hdr_settings),
                 }
             )
             )
