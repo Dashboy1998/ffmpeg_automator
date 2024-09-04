@@ -125,10 +125,6 @@ def get_hdr_setings(file_path):
 
 
 def run_ffmpeg(input_path, output_path):
-    # To set bit rate add b='128k'
-    # To set stereo audio add ac=2, channel_layout='stereo'
-    # ac=2 specifies that the output audio should have 2 channels (stereo).
-    # channel_layout='stereo' ensures that the channels are set to stereo.
     map_streams = get_maps(input_path)
     is_hdr = check_hdr(input_path)
     if is_hdr:
