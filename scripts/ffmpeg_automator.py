@@ -119,8 +119,6 @@ def run_ffmpeg(input_path, output_path):
     map_streams = get_maps(input_path)
     is_hdr = check_hdr(input_path)
     if is_hdr:
-        sys.stdout.write("HDR found, exiting\n")
-        return False
         hdr_settings = get_hdr_setings(input_path)
         ffmpeg = (
             FFmpeg().input(input_path).output(
@@ -132,11 +130,9 @@ def run_ffmpeg(input_path, output_path):
                     'map':map_streams,
                     'crf':os.environ['CRF'],
                     'preset':os.environ['PRESET'],
+                    'libsvtav1-params':"hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll=0,0 -pix_fmt {pix_fmt}".format(**hdr_settings),
                 }
-                ).global_args(
-                    # Unsure of how to add this part
-                    '-x265-params', "hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll=0,0 -pix_fmt {pix_fmt}".format(**hdr_settings)
-                )
+            )
             )
 
     ffmpeg = (
