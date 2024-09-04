@@ -23,7 +23,7 @@ then using FFMPEG it will encode the videos to you the settings you defined
 | INPUT_DIR | Absolute path volume which contains the MKVs | /data/archive_dir | Absolute Path |
 | ENCODED_DIR | Absolute path volume and is where encoded MKVs are saved | /data/encoded_dir | Absolute Path |
 | ARCHIVE_DIR | Absolute path volume where original MKVs are moved to after being encoded | /data/archive_dir | Absolute Path |
-| VCODEC | Video codec | libsvtav1 | See FFMPEG documentation |
+| VCODEC | Video codec | libsvtav1, HDR only works for AV1 | See FFMPEG documentation |
 | ACODEC | Audio codec | libfdk_aac | See FFMPEG documentation |
 | SCODEC | Subtitle codec | copy | See FFMPEG documentation |
 | PRESET | Preset used for compression effciency | 6 | Depends on VCODEC, see FFMPEG documentation |
