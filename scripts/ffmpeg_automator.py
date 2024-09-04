@@ -56,11 +56,11 @@ def get_maps(file_path):
 
     audio_maps = get_audio_maps(streams)
     if audio_maps:
-        map_list + audio_maps
+        map_list = map_list + audio_maps
 
     subtitle_map = get_subtitle_maps(streams)
     if subtitle_map: 
-        map_list + subtitle_map
+        map_list = map_list + subtitle_map
 
     return map_list
 
