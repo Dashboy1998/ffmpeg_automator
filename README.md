@@ -28,10 +28,9 @@ then using FFMPEG it will encode the videos to you the settings you defined
 | SCODEC | Subtitle codec | copy | See FFMPEG documentation |
 | PRESET | Preset used for compression effciency | 6 | Depends on VCODEC, see FFMPEG documentation |
 | CRF | Constant Rate Factor used by encoder | 32 | Depends on VCODEC, see FFMPEG documentation |
-| FIRST_AUDIO_PER_LANG_ONLY | Set to get only the first audio track of a given language | true | boolean
-AUDIO_LANGUAGES | Array with list of languages to save audio tracks | [ "eng" ] | Array of strings ex. [ "eng", "jpn" ]
-SUBTITLE_LANGUAGES | Array with list of langiages to save for subtitles | [ "eng" ] | Array of strings ex. [ "eng", "jpn" ]
-
+| FIRST_AUDIO_PER_LANG_ONLY | Set to get only the first audio track of a given language | true | boolean |
+| AUDIO_LANGUAGES | Array with list of languages to save audio tracks | [ "eng" ] | Array of strings ex. [ "eng", "jpn" ] |
+| SUBTITLE_LANGUAGES | Array with list of langiages to save for subtitles | [ "eng" ] | Array of strings ex. [ "eng", "jpn" ] |
 
 ## Volume Mounts
 
