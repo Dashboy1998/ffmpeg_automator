@@ -92,9 +92,9 @@ def get_hdr_setings(file_path):
             file_path,
             print_format='json',
             select_streams='v',
-            read_intervals="%+#1",
+            read_intervals='%+#1',
             show_frames=None,
-            show_entries="frame=color_space,color_primaries,color_transfer,side_data_list,pix_fmt",
+            show_entries='frame=color_space,color_primaries,color_transfer,side_data_list,pix_fmt',
             ).execute(),
         )
 
@@ -139,7 +139,7 @@ def run_ffmpeg(input_path, output_path):
                     'map': map_streams,
                     'crf': os.environ['CRF'],
                     'preset': os.environ['PRESET'],
-                    'libsvtav1-params': "hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll={max_content},{max_average} -pix_fmt {pix_fmt}".format(**hdr_settings),
+                    'libsvtav1-params': 'hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll={max_content},{max_average} -pix_fmt {pix_fmt}'.format(**hdr_settings),
                 },
             )
             )
@@ -158,19 +158,19 @@ def run_ffmpeg(input_path, output_path):
             )
         )
 
-    @ffmpeg.on("progress")
+    @ffmpeg.on('progress')
     def on_progress(progress: Progress):
-        sys.stdout.write("{0}\r".format(str(progress)))
+        sys.stdout.write('{0}\r'.format(str(progress)))
 
     try:
         ffmpeg.execute()
     except FFmpegError as exception:
-        sys.stdout.write("An exception has been occurred!")
-        sys.stdout.write("- Message from ffmpeg: {0}\n".format(str(exception.message)))
-        sys.stdout.write("- Arguments to execute ffmpeg: {0}\n".format(str(exception.arguments)))
+        sys.stdout.write('An exception has been occurred!')
+        sys.stdout.write('- Message from ffmpeg: {0}\n'.format(str(exception.message)))
+        sys.stdout.write('- Arguments to execute ffmpeg: {0}\n'.format(str(exception.arguments)))
         return False
 
-    sys.stdout.write("\n")
+    sys.stdout.write('\n')
     return True
 
 
