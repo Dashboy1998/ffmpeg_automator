@@ -21,7 +21,7 @@ def get_audio_maps(streams):
             index = index + 1
             if stream['tags']['language'].lower() in audio_languages:
                 if not get_first_audio_per_lang_only \
-                   or ( get_first_audio_per_lang_only and stream['tags']['language'].lower() not in lang_found ):
+                   or (get_first_audio_per_lang_only and stream['tags']['language'].lower() not in lang_found):
                     audio_map.append('0:a:{0}'.format(str(index)))
                     lang_found.append(stream['tags']['language'])
 
@@ -56,11 +56,11 @@ def get_maps(file_path):
 
     audio_maps = get_audio_maps(streams)
     if audio_maps:
-        map_list = map_list + audio_maps
+        map_list += audio_maps
 
     subtitle_map = get_subtitle_maps(streams)
-    if subtitle_map: 
-        map_list = map_list + subtitle_map
+    if subtitle_map:
+        map_list += subtitle_map
 
     return map_list
 
@@ -94,11 +94,11 @@ def get_hdr_setings(file_path):
             select_streams='v',
             read_intervals="%+#1",
             show_frames=None,
-            show_entries="frame=color_space,color_primaries,color_transfer,side_data_list,pix_fmt"
+            show_entries="frame=color_space,color_primaries,color_transfer,side_data_list,pix_fmt",
             ).execute(),
         )
 
-    hdr_settings = dict()
+    hdr_settings = {}
 
     for frame in media_info['frames']:
         hdr_settings['color_space'] = frame['color_space']
@@ -133,14 +133,14 @@ def run_ffmpeg(input_path, output_path):
             FFmpeg().input(input_path).output(
                 output_path,
                 {
-                    'vcodec':os.environ['VCODEC'],
-                    'acodec':os.environ['ACODEC'],
-                    'scodec':os.environ['SCODEC'],
-                    'map':map_streams,
-                    'crf':os.environ['CRF'],
-                    'preset':os.environ['PRESET'],
-                    'libsvtav1-params':"hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll={max_content},{max_average} -pix_fmt {pix_fmt}".format(**hdr_settings),
-                }
+                    'vcodec': os.environ['VCODEC'],
+                    'acodec': os.environ['ACODEC'],
+                    'scodec': os.environ['SCODEC'],
+                    'map': map_streams,
+                    'crf': os.environ['CRF'],
+                    'preset': os.environ['PRESET'],
+                    'libsvtav1-params': "hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll={max_content},{max_average} -pix_fmt {pix_fmt}".format(**hdr_settings),
+                },
             )
             )
 
@@ -148,13 +148,13 @@ def run_ffmpeg(input_path, output_path):
         FFmpeg().input(input_path).output(
             output_path,
             {
-                'vcodec':os.environ['VCODEC'],
-                'acodec':os.environ['ACODEC'],
-                'scodec':os.environ['SCODEC'],
-                'map':map_streams,
-                'crf':os.environ['CRF'],
-                'preset':os.environ['PRESET'],
-            }
+                'vcodec': os.environ['VCODEC'],
+                'acodec': os.environ['ACODEC'],
+                'scodec': os.environ['SCODEC'],
+                'map': map_streams,
+                'crf': os.environ['CRF'],
+                'preset': os.environ['PRESET'],
+            },
             )
         )
 
