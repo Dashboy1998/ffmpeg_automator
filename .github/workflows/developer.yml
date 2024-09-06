@@ -35,7 +35,7 @@ jobs:
           images: |
             ${{ github.repository }}
             ghcr.io/${{ github.repository }}
-          tags: type=raw,value=dev
+          tags: type=raw,value=main
           flavor: latest=false
 
       - name: Docker - Build / Push
