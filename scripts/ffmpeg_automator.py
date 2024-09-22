@@ -191,7 +191,7 @@ def main():
     for root, _, files in sorted(os.walk(os.environ['INPUT_DIR'])):
         mv_dir, encoded_dir = create_directories(root)
 
-        for file_path in files:
+        for file_path in sorted(files):
             if os.path.splitext(file_path)[-1].lower() == '.mkv':
                 video_path = os.path.join(root, file_path)
                 sys.stdout.write('{0}\n'.format(video_path))
