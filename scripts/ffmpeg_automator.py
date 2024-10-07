@@ -192,10 +192,11 @@ def main():
         mv_dir, encoded_dir = create_directories(root)
 
         for file_path in sorted(files):
-            if os.path.splitext(file_path)[-1].lower() == '.mkv':
+            extension = os.path.splitext(file_path)[-1]
+            if extension.lower() in [ '.mkv', '.mp4', '.avi' ]:
                 video_path = os.path.join(root, file_path)
                 sys.stdout.write('{0}\n'.format(video_path))
-                output_path = os.path.join(encoded_dir, file_path)
+                output_path = os.path.join(encoded_dir, file_path.replace(extension, '.mkv'))
 
                 # Check if output file exists
                 if os.path.isfile(output_path):
