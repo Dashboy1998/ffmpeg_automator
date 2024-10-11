@@ -126,35 +126,23 @@ def get_hdr_setings(file_path):
 
 def run_ffmpeg(input_path, output_path):
     map_streams = get_maps(input_path)
-    is_hdr = check_hdr(input_path)
-    if is_hdr:
+    encode_settings = {
+        'vcodec': os.environ['VCODEC'],
+        'acodec': os.environ['ACODEC'],
+        'scodec': os.environ['SCODEC'],
+        'map': map_streams,
+        'crf': os.environ['CRF'],
+        'preset': os.environ['PRESET'],
+    }
+
+    if check_hdr(input_path):
         hdr_settings = get_hdr_setings(input_path)
-        ffmpeg = (
-            FFmpeg().input(input_path).output(
-                output_path,
-                {
-                    'vcodec': os.environ['VCODEC'],
-                    'acodec': os.environ['ACODEC'],
-                    'scodec': os.environ['SCODEC'],
-                    'map': map_streams,
-                    'crf': os.environ['CRF'],
-                    'preset': os.environ['PRESET'],
-                    'libsvtav1-params': 'hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll={max_content},{max_average} -pix_fmt {pix_fmt}'.format(**hdr_settings),
-                },
-            )
-            )
+        encode_settings['libsvtav1-params'] = 'hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll={max_content},{max_average} -pix_fmt {pix_fmt}'.format(**hdr_settings)
 
     ffmpeg = (
         FFmpeg().input(input_path).output(
             output_path,
-            {
-                'vcodec': os.environ['VCODEC'],
-                'acodec': os.environ['ACODEC'],
-                'scodec': os.environ['SCODEC'],
-                'map': map_streams,
-                'crf': os.environ['CRF'],
-                'preset': os.environ['PRESET'],
-            },
+            encode_settings,
             )
         )
 
