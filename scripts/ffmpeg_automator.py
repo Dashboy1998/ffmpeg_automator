@@ -16,14 +16,24 @@ def get_audio_maps(streams):
     get_first_audio_per_lang_only = os.environ['FIRST_AUDIO_PER_LANG_ONLY'].lower() == 'true'
     lang_found = []
     index = -1
+
     for stream in streams:
         if stream['codec_type'] == 'audio':
             index = index + 1
-            if stream['tags']['language'].lower() in audio_languages:
+            if 'tags' in stream and 'language' in stream['tags'] and stream['tags']['language'].lower() in audio_languages:
                 if not get_first_audio_per_lang_only \
                    or (get_first_audio_per_lang_only and stream['tags']['language'].lower() not in lang_found):
                     audio_map.append('0:a:{0}'.format(str(index)))
                     lang_found.append(stream['tags']['language'])
+
+    if not audio_map:
+        print("No audio tracks found for given languages: " + str(audio_languages))
+        print("Ignoring audio track languages")
+        index = -1
+        for stream in streams:
+            if stream['codec_type'] == 'audio':
+                index = index + 1
+                audio_map.append('0:a:{0}'.format(str(index)))
 
     return audio_map
 
@@ -36,7 +46,7 @@ def get_subtitle_maps(streams):
     for stream in streams:
         if stream['codec_type'] == 'subtitle':
             index = index + 1
-            if stream['tags']['language'].lower() in subtitle_languages:
+            if 'language' in stream['tags'] and stream['tags']['language'].lower() in subtitle_languages:
                 subtitle_map.append('0:s:{0}'.format(str(index)))
 
     return subtitle_map
