@@ -191,7 +191,7 @@ def main():
 
         for file_path in sorted(files):
             extension = os.path.splitext(file_path)[-1]
-            if extension.lower() in [ '.mkv', '.mp4', '.avi' ]:
+            if extension.lower() in [ '.mkv', '.mp4', '.avi', '.m4v', '.ts', '.f4v' ]:
                 video_path = os.path.join(root, file_path)
                 sys.stdout.write('{0}\n'.format(video_path))
                 output_path = os.path.join(encoded_dir, file_path.replace(extension, '.mkv'))
