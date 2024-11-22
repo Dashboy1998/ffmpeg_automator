@@ -1,13 +1,11 @@
-# hadolint ignore=DL3007
-FROM linuxserver/ffmpeg:latest
+FROM linuxserver/ffmpeg:amd64-version-7.1-cli
 
 WORKDIR /
 COPY --chown=user:user requirements.txt requirements.txt
 
-# hadolint ignore=DL3008
 RUN apt-get update && apt-get install --no-install-recommends -y \
-    python-is-python3 \
-    pip \
+    python-is-python3=3.11.4-1 \
+    python3-pip=24.0+dfsg-1ubuntu1.1 \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -38,4 +36,5 @@ ENV INPUT_DIR=/data/input_dir \
     SUBTITLE_LANGUAGES='[ "eng" ]' \
     PYTHONUNBUFFERED=1
 
-ENTRYPOINT [ "python", "/scripts/ffmpeg_automator.py" ]
+# ENTRYPOINT [ "python", "/scripts/ffmpeg_automator.py" ]
+ENTRYPOINT [ "tail", "-f", "/dev/null" ]
