@@ -29,8 +29,8 @@ def get_audio_maps(streams):
                     lang_found.append(language)
 
     if not audio_map:
-        print("No audio tracks found for given languages: " + str(audio_languages))
-        print("Ignoring audio track languages")
+        sys.stdout.write('No audio tracks found for given languages: {0}\n'.format(str(audio_languages)))
+        sys.stdout.write('Ignoring audio track languages\n')
         index = -1
         for stream in streams:
             if stream['codec_type'] == 'audio':
