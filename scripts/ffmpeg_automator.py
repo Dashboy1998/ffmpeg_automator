@@ -20,7 +20,7 @@ def get_audio_maps(streams):
     for stream in streams:
         if stream['codec_type'] == 'audio':
             index = index + 1
-            language = streams.get('tags', {}).get('language')
+            language = stream.get('tags', {}).get('language')
             language_lower = language.lower()
             if language_lower in audio_languages:
                 if not get_first_audio_per_lang_only \
