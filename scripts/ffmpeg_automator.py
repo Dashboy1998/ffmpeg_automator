@@ -92,7 +92,7 @@ def check_hdr(file_path):
     for stream in media_info['streams']:
         if stream['codec_type'] == 'video':
             if 'color_space' in stream:
-                hdr = 'bt2020nc' == stream['color_space']
+                hdr = stream.get('color_space') == 'bt2020nc'
             break
 
     return hdr
