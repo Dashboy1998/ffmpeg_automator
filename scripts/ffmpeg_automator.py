@@ -11,6 +11,7 @@ from ffmpeg import FFmpeg, FFmpegError, Progress
 
 def get_audio_maps(streams):
     audio_map = []
+    audio_map_backup = []
     audio_languages = json.loads(os.environ['AUDIO_LANGUAGES'])
 
     get_first_audio_per_lang_only = os.environ['FIRST_AUDIO_PER_LANG_ONLY'].lower() == 'true'
@@ -20,6 +21,7 @@ def get_audio_maps(streams):
     for stream in streams:
         if stream['codec_type'] == 'audio':
             index = index + 1
+            audio_map_backup.append('0:a:{0}'.format(str(index)))  # Used if no matching languages are found
             language = stream.get('tags', {}).get('language')
             language_lower = language.lower()
             if language_lower in audio_languages:
@@ -31,11 +33,7 @@ def get_audio_maps(streams):
     if not audio_map:
         sys.stdout.write('No audio tracks found for given languages: {0}\n'.format(str(audio_languages)))
         sys.stdout.write('Ignoring audio track languages\n')
-        index = -1
-        for stream in streams:
-            if stream['codec_type'] == 'audio':
-                index = index + 1
-                audio_map.append('0:a:{0}'.format(str(index)))
+        audio_map = audio_map_backup
 
     return audio_map
 
