@@ -214,6 +214,8 @@ class VideoFile:
         # Check if output file exists
         if os.path.isfile(self._output_path):
             sys.stdout.write('File already exists in destination, unable to encode video: {0}\n'.format(self._video_path))  # noqa: E501
+        elif os.path.isfile(self._tmp_output_path):
+            sys.stdout.write('Temporary file already exists in destination, unable to encode video: {0}\n'.format(self._tmp_output_path))  # noqa: E501
         else:
 
             encode_success = run_ffmpeg(self._video_path, self._tmp_output_path)
