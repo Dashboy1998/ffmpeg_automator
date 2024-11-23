@@ -184,7 +184,7 @@ def create_directories(root):
     return mv_dir, encoded_dir
 
 
-class VideoFile():
+class VideoFile:
     def __init__(self, root_dir, file_path):
         self._root_dir = root_dir
         self._file_path = file_path
