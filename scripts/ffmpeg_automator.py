@@ -18,13 +18,15 @@ def get_audio_maps(streams):  # noqa: WPS231
     lang_found = []
     index = -1
 
+    use_all_languages = 'all' in audio_languages
+
     for stream in streams:
         if stream['codec_type'] == 'audio':
             index = index + 1
             audio_map_backup.append('0:a:{0}'.format(str(index)))  # Used if no matching languages are found
             language = stream.get('tags', {}).get('language', '')
             language_lower = language.lower()
-            if language_lower in audio_languages:
+            if use_all_languages or language_lower in audio_languages:
                 if not get_first_audio_per_lang_only or (get_first_audio_per_lang_only and language_lower not in lang_found):  # noqa: E501, WPS337, WPS408
                     audio_map.append('0:a:{0}'.format(str(index)))
                     lang_found.append(language)
