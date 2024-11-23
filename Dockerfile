@@ -36,5 +36,4 @@ ENV INPUT_DIR=/data/input_dir \
     SUBTITLE_LANGUAGES='[ "eng" ]' \
     PYTHONUNBUFFERED=1
 
-# ENTRYPOINT [ "python", "/scripts/ffmpeg_automator.py" ]
-ENTRYPOINT [ "tail", "-f", "/dev/null" ]
+ENTRYPOINT [ "python", "/scripts/ffmpeg_automator.py" ]
