@@ -184,28 +184,52 @@ def create_directories(root):
     return mv_dir, encoded_dir
 
 
-def main():  # noqa: WPS231
+class VideoFile():
+    def __init__(self, root_dir, file_path):
+        self._root_dir = root_dir
+        self._file_path = file_path
+        mv_dir, encoded_dir = create_directories(root_dir)
+        self._mv_dir = mv_dir
+        self._encoded_dir = encoded_dir
+        self._extension = os.path.splitext(file_path)[-1]
+
+    @property
+    def extension(self):
+        return self._extension
+
+    @property
+    def video_path(self):
+        return self._video_path
+
+    def create_paths(self):
+        self._video_path = os.path.join(self._root_dir, self._file_path)
+        new_file_name = self._file_path.replace(self._extension, '.mkv')
+        self._output_path = os.path.join(self._encoded_dir, new_file_name)
+
+    def process_file(self):
+        # Check if output file exists
+        if os.path.isfile(self._output_path):
+            sys.stdout.write('File already exists in destination, unable to encode video: {0}\n'.format(self._video_path))  # noqa: E501
+        else:
+
+            encode_success = run_ffmpeg(self._video_path, self._output_path)
+
+            if encode_success:
+                mv_video_path = os.path.join(self._mv_dir, self._file_path)
+                shutil.move(self._video_path, mv_video_path)
+            else:
+                sys.stdout.write('Unable to encode video: {0}\n'.format(self._video_path))
+
+
+def main():
     for root, _, files in sorted(os.walk(os.environ['INPUT_DIR'])):
-        mv_dir, encoded_dir = create_directories(root)
-
         for file_path in sorted(files):
-            extension = os.path.splitext(file_path)[-1]
-            if extension.lower() in {'.mkv', '.mp4', '.avi', '.m4v', '.ts', '.f4v', '.webm'}:
-                video_path = os.path.join(root, file_path)
-                sys.stdout.write('{0}\n'.format(video_path))
-                output_path = os.path.join(encoded_dir, file_path.replace(extension, '.mkv'))
+            video_file = VideoFile(root, file_path)
+            if video_file.extension.lower() in {'.mkv', '.mp4', '.avi', '.m4v', '.ts', '.f4v', '.webm'}:
+                video_file.create_paths()
+                sys.stdout.write('{0}\n'.format(video_file.video_path))
 
-                # Check if output file exists
-                if os.path.isfile(output_path):
-                    sys.stdout.write('File already exists in destination, unable to encode video: {0}\n'.format(video_path))  # noqa: E501
-                else:
-                    encode_success = run_ffmpeg(video_path, output_path)
-
-                    if encode_success:
-                        mv_video_path = os.path.join(mv_dir, file_path)  # noqa: WPS220
-                        shutil.move(video_path, mv_video_path)  # noqa: WPS220
-                    else:
-                        sys.stdout.write('Unable to encode video: {0}\n'.format(video_path))  # noqa: WPS220
+                video_file.process_file()
 
 
 if __name__ == '__main__':
