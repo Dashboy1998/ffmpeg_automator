@@ -205,7 +205,9 @@ class VideoFile:
 
     def create_paths(self):
         self._video_path = os.path.join(self._root_dir, self._file_path)
+        new_tmp_file_name = self._file_path.replace(self._extension, '.tmp.mkv')
         new_file_name = self._file_path.replace(self._extension, '.mkv')
+        self._tmp_output_path = os.path.join(self._encoded_dir, new_tmp_file_name)
         self._output_path = os.path.join(self._encoded_dir, new_file_name)
 
     def process_file(self):
@@ -214,9 +216,13 @@ class VideoFile:
             sys.stdout.write('File already exists in destination, unable to encode video: {0}\n'.format(self._video_path))  # noqa: E501
         else:
 
-            encode_success = run_ffmpeg(self._video_path, self._output_path)
+            encode_success = run_ffmpeg(self._video_path, self._tmp_output_path)
 
             if encode_success:
+                # Remove tmp from file name
+                shutil.move(self._tmp_output_path, self._output_path)
+
+                # Move original file to archive
                 mv_video_path = os.path.join(self._mv_dir, self._file_path)
                 shutil.move(self._video_path, mv_video_path)
             else:
