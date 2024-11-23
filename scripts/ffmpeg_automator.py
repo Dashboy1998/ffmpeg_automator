@@ -9,7 +9,7 @@ from datetime import datetime
 from ffmpeg import FFmpeg, FFmpegError, Progress
 
 
-def get_audio_maps(streams):
+def get_audio_maps(streams):  # noqa: WPS231
     audio_map = []
     audio_map_backup = []
     audio_languages = json.loads(os.environ['AUDIO_LANGUAGES'])
@@ -25,8 +25,7 @@ def get_audio_maps(streams):
             language = stream.get('tags', {}).get('language')
             language_lower = language.lower()
             if language_lower in audio_languages:
-                if not get_first_audio_per_lang_only \
-                   or (get_first_audio_per_lang_only and language_lower not in lang_found):
+                if not get_first_audio_per_lang_only or (get_first_audio_per_lang_only and language_lower not in lang_found):  # noqa: E501, WPS337, WPS408
                     audio_map.append('0:a:{0}'.format(str(index)))
                     lang_found.append(language)
 
@@ -147,7 +146,7 @@ def run_ffmpeg(input_path, output_path):
 
     if check_hdr(input_path):
         hdr_settings = get_hdr_setings(input_path)
-        encode_settings['libsvtav1-params'] = 'hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll={max_content},{max_average} -pix_fmt {pix_fmt}'.format(**hdr_settings)
+        encode_settings['libsvtav1-params'] = 'hdr-opt=1:repeat-headers=1:colorprim={color_primaries}:transfer={color_transfer}:colormatrix={color_space}:master-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):max-cll={max_content},{max_average} -pix_fmt {pix_fmt}'.format(**hdr_settings)  # noqa: E501
 
     ffmpeg = (
         FFmpeg().input(input_path).output(
@@ -157,7 +156,7 @@ def run_ffmpeg(input_path, output_path):
         )
 
     @ffmpeg.on('progress')
-    def on_progress(progress: Progress):
+    def on_progress(progress: Progress):  # noqa: WPS430
         sys.stdout.write('{0}\r'.format(str(progress)))
 
     try:
@@ -185,7 +184,7 @@ def create_directories(root):
     return mv_dir, encoded_dir
 
 
-def main():
+def main():  # noqa: WPS231
     for root, _, files in sorted(os.walk(os.environ['INPUT_DIR'])):
         mv_dir, encoded_dir = create_directories(root)
 
@@ -198,15 +197,15 @@ def main():
 
                 # Check if output file exists
                 if os.path.isfile(output_path):
-                    sys.stdout.write('File already exists in destination, unable to encode video: {0}\n'.format(video_path))
+                    sys.stdout.write('File already exists in destination, unable to encode video: {0}\n'.format(video_path))  # noqa: E501
                 else:
                     encode_success = run_ffmpeg(video_path, output_path)
 
                     if encode_success:
-                        mv_video_path = os.path.join(mv_dir, file_path)
-                        shutil.move(video_path, mv_video_path)
+                        mv_video_path = os.path.join(mv_dir, file_path)  # noqa: WPS220
+                        shutil.move(video_path, mv_video_path)  # noqa: WPS220
                     else:
-                        sys.stdout.write('Unable to encode video: {0}\n'.format(video_path))
+                        sys.stdout.write('Unable to encode video: {0}\n'.format(video_path))  # noqa: WPS220
 
 
 if __name__ == '__main__':
