@@ -15,9 +15,13 @@ def get_audio_maps(streams):  # noqa: WPS231
     audio_languages = json.loads(os.environ['AUDIO_LANGUAGES'])
 
     get_first_audio_per_lang_only = os.environ['FIRST_AUDIO_PER_LANG_ONLY'].lower() == 'true'
+    use_highest_channels = os.environ['HIGHEST_CHANNELS'].lower() == 'true'
     lang_found = []
     index = -1
 
+    # Dictionary to keep track of the highest channel count stream per language (only if HIGHEST_CHANNELS is true)
+    if use_highest_channels:
+        highest_channels_per_lang = {}
     use_all_languages = 'all' in audio_languages
 
     for stream in streams:
@@ -27,9 +31,21 @@ def get_audio_maps(streams):  # noqa: WPS231
             language = stream.get('tags', {}).get('language', '')
             language_lower = language.lower()
             if use_all_languages or language_lower in audio_languages:
-                if not get_first_audio_per_lang_only or (get_first_audio_per_lang_only and language_lower not in lang_found):  # noqa: E501, WPS337, WPS408
-                    audio_map.append('0:a:{0}'.format(str(index)))
-                    lang_found.append(language)
+                if use_highest_channels:
+                    # Only consider streams with the highest channel count
+                    channels = stream.get('channels', 0)  # Get channel count, default to 0 if not present
+                    if language not in highest_channels_per_lang or channels > highest_channels_per_lang[language]['channels']:
+                        highest_channels_per_lang[language] = {'index': index, 'channels': channels}
+                else:
+                    # If not using highest channels, just pick the first stream per language if needed
+                    if not get_first_audio_per_lang_only or (get_first_audio_per_lang_only and language_lower not in lang_found):  # noqa: E501, WPS337, WPS408
+                        audio_map.append('0:a:{0}'.format(str(index)))
+                        lang_found.append(language)
+
+    # If using highest channels, build the audio map from the highest channel dictionary
+    if use_highest_channels:
+        for _, stream_info in highest_channels_per_lang.items():
+            audio_map.append('0:a:{0}'.format(str(stream_info['index'])))
 
     if not audio_map:
         sys.stdout.write('No audio tracks found for given languages: {0}\n'.format(str(audio_languages)))
