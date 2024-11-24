@@ -84,7 +84,7 @@ def get_audio_maps(streams):  # noqa: WPS231
 
 def get_subtitle_maps(streams):
     languages = json.loads(os.environ['SUBTITLE_LANGUAGES'])
-    filtered_streams = languages if 'all' in languages else filter_languages(streams, languages)
+    filtered_streams = streams if 'all' in languages else filter_languages(streams, languages)
 
     stream_map = []
     for index in sorted(filtered_streams.keys()):
