@@ -12,11 +12,10 @@ from ffmpeg import FFmpeg, FFmpegError, Progress
 def filter_languages(streams, languages):
     filtered_streams = {}
     langs_found = set()
-    use_all_languages = 'all' in languages
 
     for index, stream in streams.items():
         language_lower = stream.get('tags', {}).get('language', '').lower()
-        if use_all_languages or language_lower in languages:
+        if language_lower in languages:
             filtered_streams[index] = stream
             langs_found.add(language_lower)
 
@@ -83,8 +82,8 @@ def get_audio_maps(streams):  # noqa: WPS231
 
 
 def get_subtitle_maps(streams):
-    subtitle_languages = json.loads(os.environ['SUBTITLE_LANGUAGES'])
-    filtered_streams = filter_languages(streams, subtitle_languages)
+    languages = json.loads(os.environ['SUBTITLE_LANGUAGES'])
+    filtered_streams = languages if 'all' in languages else filter_languages(streams, languages)
 
     subtitle_map = []
     for index, stream in filtered_streams.items():
