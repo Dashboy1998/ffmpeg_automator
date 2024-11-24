@@ -31,9 +31,11 @@ ENV INPUT_DIR=/data/input_dir \
     SCODEC=copy \
     PRESET=6 \
     CRF=32 \
+    DATE_SUBDIR="false" \
     FIRST_AUDIO_PER_LANG_ONLY="true" \
     AUDIO_LANGUAGES='[ "eng" ]' \
     SUBTITLE_LANGUAGES='[ "eng" ]' \
+    HIGHEST_CHANNELS="false" \
     PYTHONUNBUFFERED=1
 
 ENTRYPOINT [ "python", "/scripts/ffmpeg_automator.py" ]
