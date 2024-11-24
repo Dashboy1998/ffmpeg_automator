@@ -61,10 +61,9 @@ def get_subtitle_maps(streams):
 
     index = -1
     for stream in streams:
-        if stream['codec_type'] == 'subtitle':
-            index = index + 1
-            if stream['tags'].get('language', '').lower() in subtitle_languages:
-                subtitle_map.append('0:s:{0}'.format(str(index)))
+        index = index + 1
+        if stream['tags'].get('language', '').lower() in subtitle_languages:
+            subtitle_map.append('0:s:{0}'.format(str(index)))
 
     return subtitle_map
 
@@ -81,11 +80,16 @@ def get_maps(file_path):
     map_list = ['0:v']
     streams = media_info['streams']
 
+    subtitle_streams = []
+    for stream in streams:
+        if stream['codec_type'] == 'subtitle':
+            subtitle_streams.append(stream) 
+
     audio_maps = get_audio_maps(streams)
     if audio_maps:
         map_list += audio_maps
 
-    subtitle_map = get_subtitle_maps(streams)
+    subtitle_map = get_subtitle_maps(subtitle_streams)
     if subtitle_map:
         map_list += subtitle_map
 
