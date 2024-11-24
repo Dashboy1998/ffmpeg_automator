@@ -15,9 +15,7 @@ def filter_languages(streams, languages, stream_type, get_first_per_lang):
     langs_found = set()
     use_all_languages = 'all' in languages
 
-    index = -1
-    for stream in streams:
-        index = index + 1
+    for index, stream in streams.items():
         language_lower = stream.get('tags', {}).get('language', '').lower()
 
         # Check if we are adding all languages or if this language is in the set
@@ -97,10 +95,12 @@ def get_maps(file_path):
     map_list = ['0:v']
     streams = media_info['streams']
 
-    subtitle_streams = []
+    subtitle_streams = {}
+    index = -1
     for stream in streams:
+        index = index + 1
         if stream['codec_type'] == 'subtitle':
-            subtitle_streams.append(stream) 
+            subtitle_streams[index] = stream
 
     audio_maps = get_audio_maps(streams)
     if audio_maps:
