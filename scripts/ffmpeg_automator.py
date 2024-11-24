@@ -174,7 +174,9 @@ def run_ffmpeg(input_path, output_path):
 
 
 def create_directories(root):
-    date = datetime.today().strftime('%Y-%m-%d')
+    date = ''
+    if os.environ['DATE_SUBDIR'].lower() == 'true':
+        date = datetime.today().strftime('%Y-%m-%d')
     relpath = os.path.relpath(root, os.environ['INPUT_DIR'])
 
     mv_dir = os.path.join(os.environ['ARCHIVE_DIR'], date, relpath)
