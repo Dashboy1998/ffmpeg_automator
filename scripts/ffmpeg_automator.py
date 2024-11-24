@@ -8,6 +8,16 @@ from datetime import datetime
 
 from ffmpeg import FFmpeg, FFmpegError, Progress
 
+def filter_languages(streams, languages, stream_type):
+    stream_map = []
+
+    index = -1
+    for stream in streams:
+        index = index + 1
+        if stream.get('tags', {}).get('language', '').lower() in languages:
+            stream_map.append('0:{0}:{1}'.format(stream_type, str(index)))
+
+    return stream_map
 
 def get_audio_maps(streams):  # noqa: WPS231
     audio_map = []
@@ -56,14 +66,8 @@ def get_audio_maps(streams):  # noqa: WPS231
 
 
 def get_subtitle_maps(streams):
-    subtitle_map = []
     subtitle_languages = json.loads(os.environ['SUBTITLE_LANGUAGES'])
-
-    index = -1
-    for stream in streams:
-        index = index + 1
-        if stream.get('tags', {}).get('language', '').lower() in subtitle_languages:
-            subtitle_map.append('0:s:{0}'.format(str(index)))
+    subtitle_map = filter_languages(streams, subtitle_languages, 's')
 
     return subtitle_map
 
