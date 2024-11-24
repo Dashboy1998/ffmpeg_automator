@@ -45,7 +45,7 @@ def get_audio_maps(streams):  # noqa: WPS231
 # If using highest channels, build the audio map from the highest channel dictionary
     if use_highest_channels:
         for _, stream_info in highest_channels_per_lang.items():
-            audio_map.append(f'0:a:{stream_info["index"]}')
+            audio_map.append('0:a:{0}'.format(str(stream_info["index"])))
 
     if not audio_map:
         sys.stdout.write('No audio tracks found for given languages: {0}\n'.format(str(audio_languages)))
