@@ -36,50 +36,62 @@ def filter_duplicate_languages(streams):
 
     return filtered_streams
 
-def get_audio_maps(streams):  # noqa: WPS231
-    audio_map = []
-    audio_map_backup = []
-    audio_languages = json.loads(os.environ['AUDIO_LANGUAGES'])
+
+def highest_audio_channels(streams):
+    # {'eng': {'channels': 0, 'stream': {0: stream}}, ..., 'jpn': {'channels': 0, 'stream': {3: stream}}}
+    highest_channels_per_lang = {}
+
+    for index, stream in streams.items():
+        language_lower = stream.get('tags', {}).get('language', '').lower()
+        # Only consider streams with the highest channel count
+        channels = stream.get('channels', 0)  # Get channel count, default to 0 if not present
+
+        more_channels = channels > highest_channels_per_lang[language_lower]['channels']
+        new_language = language_lower not in highest_channels_per_lang
+        if new_language or more_channels:
+            highest_channels_per_lang[language_lower] = {'channels': channels, 'stream': {index: stream}}
+
+    # Build the filtered stream
+    filtered_streams = {}
+    for lang_stream in highest_channels_per_lang.values():
+        filtered_streams.update(lang_stream['stream'])
+
+    return filtered_streams
+
+
+def get_audio_maps(streams):
+    stream_map = []
+    filtered_streams = []
+    languages = json.loads(os.environ['AUDIO_LANGUAGES'])
 
     get_first_audio_per_lang_only = os.environ['FIRST_AUDIO_PER_LANG_ONLY'].lower() == 'true'
     use_highest_channels = os.environ['HIGHEST_CHANNELS'].lower() == 'true'
-    lang_found = []
-    index = -1
 
-    # Dictionary to keep track of the highest channel count stream per language (only if HIGHEST_CHANNELS is true)
+    # Find audio with most channels per languages
     if use_highest_channels:
-        highest_channels_per_lang = {}
-    use_all_languages = 'all' in audio_languages
+        filtered_streams = highest_audio_channels(streams)
+    else:
+        filtered_streams = streams
 
-    for stream in streams:
-        if stream['codec_type'] == 'audio':
-            index = index + 1
-            audio_map_backup.append('0:a:{0}'.format(str(index)))  # Used if no matching languages are found
-            language = stream.get('tags', {}).get('language', '')
-            language_lower = language.lower()
-            if use_all_languages or language_lower in audio_languages:
-                if use_highest_channels:
-                    # Only consider streams with the highest channel count
-                    channels = stream.get('channels', 0)  # Get channel count, default to 0 if not present
-                    if language not in highest_channels_per_lang or channels > highest_channels_per_lang[language]['channels']:
-                        highest_channels_per_lang[language] = {'index': index, 'channels': channels}
-                else:
-                    # If not using highest channels, just pick the first stream per language if needed
-                    if not get_first_audio_per_lang_only or (get_first_audio_per_lang_only and language_lower not in lang_found):  # noqa: E501, WPS337, WPS408
-                        audio_map.append('0:a:{0}'.format(str(index)))
-                        lang_found.append(language)
+    # Filter languages
+    if 'all' not in languages:
+        lang_filtered_streams = filter_languages(filtered_streams, languages)
 
-    # If using highest channels, build the audio map from the highest channel dictionary
-    if use_highest_channels:
-        for _, stream_info in highest_channels_per_lang.items():
-            audio_map.append('0:a:{0}'.format(str(stream_info['index'])))
-
-    if not audio_map:
-        sys.stdout.write('No audio tracks found for given languages: {0}\n'.format(str(audio_languages)))
+    if lang_filtered_streams:
+        filtered_streams = lang_filtered_streams
+    else:
+        sys.stdout.write('No audio tracks found for given languages: {0}\n'.format(str(languages)))
         sys.stdout.write('Ignoring audio track languages\n')
-        audio_map = audio_map_backup
 
-    return audio_map
+    # Filter duplicate languages
+    if get_first_audio_per_lang_only:
+        filtered_streams = filter_duplicate_languages(filtered_streams)
+
+    stream_map = []
+    for index in sorted(filtered_streams.keys()):
+        stream_map.append('0:a:{0}'.format(str(index)))
+
+    return stream_map
 
 
 def get_subtitle_maps(streams):
@@ -107,12 +119,17 @@ def get_maps(file_path):
 
     subtitle_streams = {}
     subtitle_index = 0
+    audio_streams = {}
+    audio_index = 0
     for stream in streams:
         if stream['codec_type'] == 'subtitle':
             subtitle_streams[subtitle_index] = stream
             subtitle_index = subtitle_index + 1
+        if stream['codec_type'] == 'audio':
+            audio_streams[audio_index] = stream
+            audio_index = audio_index + 1
 
-    audio_maps = get_audio_maps(streams)
+    audio_maps = get_audio_maps(audio_streams)
     if audio_maps:
         map_list += audio_maps
 
