@@ -9,21 +9,28 @@ from datetime import datetime
 from ffmpeg import FFmpeg, FFmpegError, Progress
 
 
-def filter_languages(streams, languages, get_first_per_lang):
+def filter_languages(streams, languages):
     filtered_streams = {}
     langs_found = set()
     use_all_languages = 'all' in languages
 
     for index, stream in streams.items():
         language_lower = stream.get('tags', {}).get('language', '').lower()
+        if use_all_languages or language_lower in languages:
+            filtered_streams[index] = stream
+            langs_found.add(language_lower)
 
-        # Check if we are adding all languages or if this language is in the set
-        add_lang = use_all_languages or language_lower in languages
+    return filtered_streams
 
-        # Check if we only want on per lang and if this lang hasn't been added
-        add_unique_lang = get_first_per_lang and language_lower not in langs_found
+# Returns only one of each language found
+def filter_duplicate_languages(streams):
+    filtered_streams = {}
+    langs_found = set()
 
-        if add_lang and (not get_first_per_lang or add_unique_lang):
+    for index, stream in streams.items():
+        language_lower = stream.get('tags', {}).get('language', '').lower()
+
+        if language_lower not in langs_found:
             filtered_streams[index] = stream
             langs_found.add(language_lower)
 
@@ -77,7 +84,7 @@ def get_audio_maps(streams):  # noqa: WPS231
 
 def get_subtitle_maps(streams):
     subtitle_languages = json.loads(os.environ['SUBTITLE_LANGUAGES'])
-    filtered_streams = filter_languages(streams, subtitle_languages, False)
+    filtered_streams = filter_languages(streams, subtitle_languages)
 
     subtitle_map = []
     for index, stream in filtered_streams.items():
