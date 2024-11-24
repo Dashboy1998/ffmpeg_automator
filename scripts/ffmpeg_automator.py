@@ -62,7 +62,7 @@ def get_subtitle_maps(streams):
     index = -1
     for stream in streams:
         index = index + 1
-        if stream['tags'].get('language', '').lower() in subtitle_languages:
+        if stream.get('tags', {}).get('language', '').lower() in subtitle_languages:
             subtitle_map.append('0:s:{0}'.format(str(index)))
 
     return subtitle_map
