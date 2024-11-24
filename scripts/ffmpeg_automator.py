@@ -21,6 +21,7 @@ def filter_languages(streams, languages):
 
     return filtered_streams
 
+
 # Returns only one of each language found
 def filter_duplicate_languages(streams):
     filtered_streams = {}
@@ -86,7 +87,7 @@ def get_subtitle_maps(streams):
     filtered_streams = languages if 'all' in languages else filter_languages(streams, languages)
 
     stream_map = []
-    for index, stream in filtered_streams.items():
+    for index in sorted(filtered_streams.keys()):
         stream_map.append('0:s:{0}'.format(str(index)))
 
     return stream_map
