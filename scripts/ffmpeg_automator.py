@@ -42,7 +42,7 @@ def get_audio_maps(streams):  # noqa: WPS231
                         audio_map.append('0:a:{0}'.format(str(index)))
                         lang_found.append(language)
 
-# If using highest channels, build the audio map from the highest channel dictionary
+    # If using highest channels, build the audio map from the highest channel dictionary
     if use_highest_channels:
         for _, stream_info in highest_channels_per_lang.items():
             audio_map.append('0:a:{0}'.format(str(stream_info["index"])))
