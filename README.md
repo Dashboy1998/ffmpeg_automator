@@ -31,7 +31,7 @@ then using FFMPEG it will encode the videos to you the settings you defined
 | DATE_SUBDIR | Creates subdirectories in for archive and encoded files | false | boolean |
 | FIRST_AUDIO_PER_LANG_ONLY | Set to get only the first audio track of a given language | true | boolean |
 | AUDIO_LANGUAGES | Array with list of languages to save audio tracks. "all" is used for all languages | [ "eng" ] | Array of strings ex. [ "eng", "jpn" ] |
-| SUBTITLE_LANGUAGES | Array with list of langiages to save for subtitles | [ "eng" ] | Array of strings ex. [ "eng", "jpn" ] |
+| SUBTITLE_LANGUAGES | Array with list of langiages to save for subtitles. "all" is used for all languages | [ "eng" ] | Array of strings ex. [ "eng", "jpn" ] |
 | HIGHEST_CHANNELS | Will only grab the highest audio channel each language or listed language | false | boolean |
 
 ## Volume Mounts

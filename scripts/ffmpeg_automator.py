@@ -10,11 +10,12 @@ from ffmpeg import FFmpeg, FFmpegError, Progress
 
 def filter_languages(streams, languages, stream_type):
     stream_map = []
+    use_all_languages = 'all' in languages
 
     index = -1
     for stream in streams:
         index = index + 1
-        if stream.get('tags', {}).get('language', '').lower() in languages:
+        if use_all_languages or stream.get('tags', {}).get('language', '').lower() in languages:
             stream_map.append('0:{0}:{1}'.format(stream_type, str(index)))
 
     return stream_map
