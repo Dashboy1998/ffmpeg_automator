@@ -76,12 +76,11 @@ def get_audio_maps(streams):
     # Filter languages
     if 'all' not in languages:
         lang_filtered_streams = filter_languages(filtered_streams, languages)
-
-    if lang_filtered_streams:
-        filtered_streams = lang_filtered_streams
-    else:
-        sys.stdout.write('No audio tracks found for given languages: {0}\n'.format(str(languages)))
-        sys.stdout.write('Ignoring audio track languages\n')
+        if lang_filtered_streams:
+            filtered_streams = lang_filtered_streams
+        else:
+            sys.stdout.write('No audio tracks found for given languages: {0}\n'.format(str(languages)))
+            sys.stdout.write('Ignoring audio track languages\n')
 
     # Filter duplicate languages
     if get_first_audio_per_lang_only:
