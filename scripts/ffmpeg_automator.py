@@ -85,11 +85,11 @@ def get_subtitle_maps(streams):
     languages = json.loads(os.environ['SUBTITLE_LANGUAGES'])
     filtered_streams = languages if 'all' in languages else filter_languages(streams, languages)
 
-    subtitle_map = []
+    stream_map = []
     for index, stream in filtered_streams.items():
-        subtitle_map.append('0:s:{0}'.format(str(index)))
+        stream_map.append('0:s:{0}'.format(str(index)))
 
-    return subtitle_map
+    return stream_map
 
 
 def get_maps(file_path):
