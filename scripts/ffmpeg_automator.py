@@ -96,11 +96,11 @@ def get_maps(file_path):
     streams = media_info['streams']
 
     subtitle_streams = {}
-    index = -1
+    subtitle_index = 0
     for stream in streams:
-        index = index + 1
         if stream['codec_type'] == 'subtitle':
-            subtitle_streams[index] = stream
+            subtitle_streams[subtitle_index] = stream
+            subtitle_index = subtitle_index + 1
 
     audio_maps = get_audio_maps(streams)
     if audio_maps:
