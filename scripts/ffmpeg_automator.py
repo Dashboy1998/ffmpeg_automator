@@ -20,7 +20,8 @@ def get_audio_maps(streams):  # noqa: WPS231
     index = -1
 
     # Dictionary to keep track of the highest channel count stream per language (only if HIGHEST_CHANNELS is true)
-    highest_channels_per_lang = {} if use_highest_channels else None
+    if use_highest_channels:
+        highest_channels_per_lang = {}
     use_all_languages = 'all' in audio_languages
 
     for stream in streams:
