@@ -176,8 +176,8 @@ def get_hdr_setings(file_path):
 
     # Set up dictionary mapping for known replacements of ffprobe values to be used by svtav1-params
     color_space_mapping = {
-    'bt2020nc': 'bt2020-ncl',
-    'bt2020c': 'bt2020-cl',
+        'bt2020nc': 'bt2020-ncl',
+        'bt2020c': 'bt2020-cl',
     }
 
     for frame in media_info['frames']:
