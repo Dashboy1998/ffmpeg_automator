@@ -154,7 +154,7 @@ def check_hdr(file_path):
     for stream in media_info['streams']:
         if stream['codec_type'] == 'video':
             if 'color_space' in stream:
-                hdr = stream.get('color_space') == 'bt2020nc'
+                hdr = 'bt2020' in stream.get('color_space')
             break
 
     return hdr
@@ -217,7 +217,7 @@ def run_ffmpeg(input_path, output_path):
 
     if check_hdr(input_path):
         hdr_settings = get_hdr_setings(input_path)
-        encode_settings['svtav1-params'] = 'enable-hdr=1:color-primaries={color_primaries}:transfer-characteristics={color_transfer}:matrix-coefficients={color_space}:mastering-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):content-light={max_content},{max_average} -pix_fmt {pix_fmt}'.format(**hdr_settings)  # noqa: E501
+        encode_settings['svtav1-params'] = 'enable-hdr=1:repetition_headers=1:color-primaries={color_primaries}:transfer-characteristics={color_transfer}:matrix-coefficients={color_space}:mastering-display=R({red_x},{red_y})G({green_x},{green_y})B({blue_x},{blue_y})WP({white_point_x},{white_point_y})L({max_luminance},{min_luminance}):content-light={max_content},{max_average} -pix_fmt {pix_fmt}'.format(**hdr_settings)  # noqa: E501
 
     ffmpeg = (
         FFmpeg().input(input_path).output(
