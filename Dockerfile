@@ -1,4 +1,4 @@
-FROM linuxserver/ffmpeg:amd64-7.1-cli-ls22
+FROM linuxserver/ffmpeg:amd64-7.1.1-cli-ls22
 
 WORKDIR /
 COPY --chown=user:user requirements.txt requirements.txt
