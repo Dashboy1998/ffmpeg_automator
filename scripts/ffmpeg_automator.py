@@ -233,7 +233,7 @@ def run_ffmpeg(input_path, output_path):
     try:
         ffmpeg.execute()
     except FFmpegError as exception:
-        sys.stdout.write('An exception has been occurred!')
+        sys.stdout.write('An exception has been occurred!\n')
         sys.stdout.write('- Message from ffmpeg: {0}\n'.format(str(exception.message)))
         sys.stdout.write('- Arguments to execute ffmpeg: {0}\n'.format(str(exception.arguments)))
         return False
