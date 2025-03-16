@@ -51,4 +51,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Python Linter
-        uses: wemake-services/wemake-python-styleguide@0.19.2
+        uses: wemake-services/wemake-python-styleguide@1.0.0
