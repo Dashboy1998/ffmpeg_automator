@@ -113,7 +113,8 @@ def get_maps(file_path):
             ).execute(),
         )
 
-    map_list = ['0:v']
+    # Assume there is only one video stream
+    map_list = ['0:v:0']
     streams = media_info['streams']
 
     subtitle_streams = {}
