@@ -5,7 +5,7 @@ COPY --chown=user:user requirements.txt requirements.txt
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
     python-is-python3=3.11.4-1 \
-    python3-pip=24.0+dfsg-1ubuntu1.1 \
+    python3-pip=24.0+dfsg-1ubuntu1.3 \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
