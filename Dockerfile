@@ -1,4 +1,4 @@
-FROM linuxserver/ffmpeg:7.1.1
+FROM linuxserver/ffmpeg:8.0.1
 
 WORKDIR /
 COPY --chown=user:user requirements.txt requirements.txt
