@@ -19,7 +19,7 @@ then using FFMPEG it will encode the videos to you the settings you defined
 ## Enviromental Variables
 
 | Variable | Info | Default Values | Allowed Values |
-|-|-|-|-|
+| - | - | - | - |
 | INPUT_DIR | Absolute path volume which contains the MKVs | /data/archive_dir | Absolute Path |
 | ENCODED_DIR | Absolute path volume and is where encoded MKVs are saved | /data/encoded_dir | Absolute Path |
 | ARCHIVE_DIR | Absolute path volume where original MKVs are moved to after being encoded | /data/archive_dir | Absolute Path |
