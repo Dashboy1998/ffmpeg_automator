@@ -9,6 +9,17 @@ updates:
     directory: "/"  # Location of package manifests
     schedule:
       interval: "daily"
+  - package-ecosystem: "regex"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    match:
+      - dependency-name: "python-is-python3"
+        file-pattern: "Dockerfile"
+        regex: "ARG PYTHON_IS_PYTHON3_VERSION=(?<version>.*)"
+      - dependency-name: "python3-pip"
+        file-pattern: "Dockerfile"
+        regex: "ARG PYTHON3_PIP_VERSION=(?<version>.*)"
   - package-ecosystem: "github-actions"  # See documentation for possible values
     directory: "/"  # Location of package manifests
     schedule:

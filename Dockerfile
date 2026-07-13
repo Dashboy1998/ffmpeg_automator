@@ -1,11 +1,14 @@
 FROM linuxserver/ffmpeg:8.1.2
 
+ARG PYTHON_IS_PYTHON3_VERSION=3.11.4-1
+ARG PYTHON3_PIP_VERSION=24.0+dfsg-1ubuntu1.3
+
 WORKDIR /
 COPY --chown=user:user requirements.txt requirements.txt
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
-    python-is-python3=3.11.4-1 \
-    python3-pip=24.0+dfsg-1ubuntu1.3 \
+    python-is-python3=${PYTHON_IS_PYTHON3_VERSION} \
+    python3-pip=${PYTHON3_PIP_VERSION} \
     && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
