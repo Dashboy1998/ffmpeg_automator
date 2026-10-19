@@ -1,4 +1,4 @@
-FROM linuxserver/ffmpeg:8.1.2
+FROM linuxserver/ffmpeg:9.0.2
 
 ARG PYTHON_IS_PYTHON3_VERSION=3.11.4-1
 ARG PYTHON3_PIP_VERSION=24.0+dfsg-1ubuntu1.3
